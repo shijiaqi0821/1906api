@@ -43,6 +43,10 @@ Route::prefix('/test')->group(function(){
     Route::post('/upload','Api\Testcontroller@upload');  //处理post上传文件
     Route::get('/getHttp','Api\Testcontroller@http');  //获取当前完整的url地址
     Route::get('/str','Api\Testcontroller@redisStr');  //获取当前完整的url地址
+
+    Route::get('/redis/count1','Api\Testcontroller@count'); //访问量的操作
+    Route::get('/url1','Api\Testcontroller@url1'); //每个页面的限制访问
+    Route::get('/url2','Api\Testcontroller@url2'); //每个页面的限制访问
 });
 
 Route::prefix('/guzzle')->group(function(){
@@ -57,3 +61,5 @@ Route::prefix('/goods')->group(function(){
     Route::get('/goods','Api\Goodscontroller@goods');
     Route::get('/number','Api\Goodscontroller@number');
 });
+
+

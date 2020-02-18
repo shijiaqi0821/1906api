@@ -151,14 +151,11 @@ class Testcontroller extends Controller
             'json' => ['token' => 'foo']
         ]);
 
-
         //$response=$client->request('POST',$url);
         $res=$response->getBody();  //获取服务端的响应
         echo $res;
 
-
     }
-
 
     //处理get请求的接口
     public function get1(){
@@ -248,5 +245,105 @@ class Testcontroller extends Controller
 
         //设置过期时间
         Redis::expire($key,300);
+    }
+
+    //*****************************************
+    //访问量
+    public function count(){
+        //使用ua辨别用户
+        $ua=$_SERVER['HTTP_USER_AGENT'];
+        $u=md5($ua); //加密让ua变短
+        $u=substr($u,6,6); //截取其中一段
+
+        //允许访问次数
+        $count=env('API_COUNT_NUMBER');
+        // echo $count;die;
+
+        //判断访问次数是否已到上限
+        $key=$u .':count';
+        $number=Redis::get($key);
+        echo "现访问次数:".$number;
+        echo "<br>";
+
+        //超过上限
+        if($number>$count){
+            $timeout=env('API_TIMEOUT_MIN');
+            Redis::expire($key,$timeout);
+            echo "接口访问受限,已超过访问次数";echo "<br>";
+            echo "请".$timeout."秒后访问";echo "<br>";
+            die;
+        }
+
+        //已访问次数
+        $num=Redis::incr($key);
+        echo $num;echo '<hr>';
+        echo "访问正常";
+
+    }
+
+    //每个接口
+    public function url1(){
+        $ua=$_SERVER['HTTP_USER_AGENT']; //用户ua
+        $u=md5($ua); //加密让ua变短
+        $u=substr($u,6,8); //截取其中一段
+        echo "用户的UA:".$u;echo "<br>";
+
+        //获取当前的uri
+        $uri=$_SERVER['REQUEST_URI'];
+        echo "URI为:".$uri;echo "<br>";
+
+        $uriMd5=substr(md5($uri),0,6);
+        echo $uriMd5;echo "<br>";
+
+        $key="count:uri:".$u.":".$uriMd5;
+        echo "Redis key:".$key;echo "<br>";
+        echo "<br>";echo "<hr>";
+
+        $count=Redis::get($key);
+        echo "当前接口的访问数量:".$count;echo "<br>";
+        $max=env('API_COUNT_NUMBER');//允许访问次数
+        echo "接口访问的最大次数:".$max;echo "<br>";
+
+        //判断
+        if($count>$max){
+            echo "一直刷什么接口！！！";
+            die;
+        }
+
+        Redis::incr($key);//每刷一次接口数量加1
+    }
+
+    //每个接口
+    public function url2(){
+        $ua=$_SERVER['HTTP_USER_AGENT']; //用户ua
+        $u=md5($ua); //加密让ua变短
+        $u=substr($u,6,8); //截取其中一段
+        echo "用户的UA:".$u;echo "<br>";
+
+        //获取当前的uri
+        $uri=$_SERVER['REQUEST_URI'];
+        echo "URI为:".$uri;echo "<br>";
+
+        $uriMd5=substr(md5($uri),0,6);
+        echo $uriMd5;echo "<br>";
+
+        $key="count:uri:".$u.":".$uriMd5;
+        echo "Redis key:".$key;echo "<br>";
+        echo "<br>";echo "<hr>";
+
+        $count=Redis::get($key);
+        echo "当前接口的访问数量:".$count;echo "<br>";
+
+        //允许访问次数
+        $max=env('API_COUNT_NUMBER');
+        echo "接口访问的最大次数:".$max;echo "<br>";
+
+        //判断
+        if($count>$max){
+            echo "一直刷什么接口....";
+            die;
+        }
+
+        Redis::incr($key);//每刷一次接口数量加1
     }
 }
