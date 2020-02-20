@@ -25,6 +25,14 @@ Route::prefix('test')->group(function () {
     Route::any('/','Api\Testcontroller@one');//获取用户信息
     Route::any('/two','Api\Testcontroller@two');//用户注册
 });
+Route::prefix('weather')->group(function () {
+    Route::any('/','Api\Testcontroller@weather');//获取天气信息
+});
+//##########################
+
+Route::get('/md2','TestController@md5Request'); //接收端
+
+//##########################
 //test测试 路由分组
 Route::prefix('/test')->group(function(){
     Route::get('/redis','Api\Testcontroller@testRedis');

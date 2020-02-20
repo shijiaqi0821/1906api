@@ -125,6 +125,7 @@ class Testcontroller extends Controller
         //数据处理
         var_dump($data);
     }
+
     /***********/
     //guzzle get额请求
     public function guzzle1(){
@@ -248,6 +249,7 @@ class Testcontroller extends Controller
     }
 
     //*****************************************
+
     //访问量
     public function count(){
         //使用ua辨别用户
@@ -346,4 +348,45 @@ class Testcontroller extends Controller
 
         Redis::incr($key);//每刷一次接口数量加1
     }
+
+    //******************************************
+
+    //获取天气信息
+    public function weather(){
+        $login = $_GET['login'];
+        $url="https://free-api.heweather.net/s6/weather?location=".$login."&key=25899fbe140a450d8d75936b1d3b8346";
+        //https://free-api.heweather.net/s6/weather/{weather-type}?{parameters}
+        $data=file_get_contents($url);
+        $arr = json_decode($data,true);
+        print_r($arr);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
