@@ -14,23 +14,28 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::get('/phpinfo', function () {
     phpinfo();
 });
 
-/*路由分组*/
 
 //关于用户
 Route::prefix('test')->group(function () {
     Route::any('/','Api\Testcontroller@one');//获取用户信息
     Route::any('/two','Api\Testcontroller@two');//用户注册
 });
+//获取天气信息
 Route::prefix('weather')->group(function () {
-    Route::any('/','Api\Testcontroller@weather');//获取天气信息
+    Route::any('/','Api\Testcontroller@weather');
 });
 //##########################
 
 Route::get('/md2','TestController@md5Request'); //接收端
+//解密
+Route::get('/decrypt','TestController@decrypt');
+
+Route::get('/decrypt1','TestController@decrypt1');
 
 //##########################
 //test测试 路由分组

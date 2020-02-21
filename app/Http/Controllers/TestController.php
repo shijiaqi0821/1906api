@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TestController extends Controller{
+class TestController extends Controller
+{
 
 //接收数据-验证签名
     public function md5Request()
@@ -27,4 +28,37 @@ class TestController extends Controller{
             echo "验证签名失败,数据损坏";
         }
     }
+
+    //解密
+    public function decrypt()
+    {
+        //echo 1111;
+        $str = $_GET['str'];
+        //$str = "h{fxvh";
+        $strlen = strlen($str);
+        $new_str = '';
+        for ($i = 0; $i < $strlen; $i++) {
+            //字母转成数字
+            $ord_str = ord($str[$i]) - 3;
+            $new_str .= chr($ord_str);
+            echo $str[$i] . '>' . ord($str[$i]) . '>' . $ord_str . '>' . chr($ord_str);
+            echo "<hr>";
+        }
+        echo $new_str;
+    }
+    //接收加密文件
+    public function decrypt1(){
+        $data = $_GET['data'];
+        $key = '1906';
+        $method = 'aes-128-cfb8';    //加算法
+        $iv = 'abcdefg2qwflmnop';    //16位组成;
+
+        $base64 =  base64_decode($data);
+        echo "解密base64编码:".$base64;echo "<br>";
+
+        $str = openssl_decrypt($base64,$method,$key,OPENSSL_RAW_DATA,$iv);
+        //echo "原始数据:".$data;echo "<br>";
+        echo "解密数据:".$str;echo "<br>";
+    }
+
 }
