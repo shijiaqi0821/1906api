@@ -37,6 +37,8 @@ Route::get('/decrypt','TestController@decrypt');
 
 Route::get('/decrypt1','TestController@decrypt1');
 
+Route::get('/rdecr','TestController@rdecr');
+
 //##########################
 //test测试 路由分组
 Route::prefix('/test')->group(function(){

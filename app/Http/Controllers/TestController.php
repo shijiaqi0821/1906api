@@ -46,6 +46,7 @@ class TestController extends Controller
         }
         echo $new_str;
     }
+
     //接收加密文件
     public function decrypt1(){
         $data = $_GET['data'];
@@ -61,4 +62,15 @@ class TestController extends Controller
         echo "解密数据:".$str;echo "<br>";
     }
 
+    //非对称解密
+    public function rdecr(){
+        echo "<pre>";print_r($_GET);echo "</pre>";
+
+        $b_data=base64_decode($_GET['data']);  //base64解码
+        var_dump($b_data);echo "<br>";
+
+        $priv=file_get_contents(storage_path('key/priv.key'));
+        openssl_private_decrypt($b_data,$de_data,$priv);
+        var_dump($de_data);
+    }
 }
