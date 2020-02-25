@@ -73,4 +73,52 @@ class TestController extends Controller
         openssl_private_decrypt($b_data,$de_data,$priv);
         var_dump($de_data);
     }
+
+    //非对称解密2
+    public function rdecr2(){
+        $data="miss you too";
+        $key=file_get_contents(storage_path('key/pub_b.key'));  //api的公钥
+
+        openssl_public_encrypt($data,$en_data,$key);//加密
+        var_dump($en_data);echo "<hr>";
+
+        $ben_data=base64_encode($en_data); //base64编码
+        print_r($ben_data);echo "<hr>";
+        $ben_data = urlencode($ben_data);
+
+        $url='http://test.1906.com/rsa2?data='.$ben_data;
+        $res=file_get_contents($url);
+        var_dump($res);
+    }
+
+    //使用非对称加密验证签名
+    public function rsaVerify(){
+        echo "<hr>";
+        echo "接收到的数据：";echo "<br>";
+        echo "<pre>";print_r($_GET);echo "</pre>";echo "<br>";
+
+        $data = $_GET['data'];
+        $sign = $_GET['sign'];
+        echo "接收的签名:".$sign;echo "<br>";
+
+        //将接收的数据中的签名进行base64解密
+        $base64_sign_str = base64_decode($sign);
+        echo "base64解密后的数据：".$base64_sign_str;echo "<br>";
+
+        //根据公钥生成key
+        $pub_key_id = openssl_pkey_get_public("file://".storage_path('keys/pub_b.key'));
+        echo "生成的key：".$pub_key_id;echo "<hr>";
+
+        //验证签名
+        $result = openssl_verify($data,$base64_sign_str,$pub_key_id,OPENSSL_ALGO_SHA256);
+        if($result == 1){
+            echo "验签通过，数据完整";
+        }else if($result == 0){
+            echo "验签失败，数据损坏";
+        }else{
+            echo "ugly, error checking signature";
+        }
+        //var_dump($result);
+
+    }
 }

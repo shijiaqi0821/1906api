@@ -36,8 +36,15 @@ Route::get('/md2','TestController@md5Request'); //接收端
 Route::get('/decrypt','TestController@decrypt');
 
 Route::get('/decrypt1','TestController@decrypt1');
-
+//非对称解密
 Route::get('/rdecr','TestController@rdecr');
+//非对称jia密2
+Route::get('/rdecr2','TestController@rdecr2');
+
+Route::get('/rsaVerify','TestController@rsaVerify');
+
+//alipay
+Route::get('/alipay','Alipaycontroller@Alipay');
 
 //##########################
 //test测试 路由分组
